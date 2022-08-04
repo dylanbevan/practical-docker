@@ -1,70 +1,52 @@
 # practical-docker
 
-Now that we're in our container there are couple of things to note.
-Firstly you may get a notification about a build issue. This occurs if you build a .net project in Windows then mount the directory in Linux.
-To rectify it simply delete your `bin` and `obj` folders.
+This project uses Entity Framework (EF) to connect to the database and generate models. If we look in the Migrations folder we can see that a number of migrations have been created already for this project
+![List of files in the migration directory](docs/images/v3-001.png)
 
+In order to use EF we need to:
+1. configure the data connection string
+2. apply a migration to the database
 
-If you open a terminal window you'll see we're now in Linux so our terminal is bash. Note that we have oh my zsh installed too.
-If you have your own dotfiles repository, hold that thought for a few minutes.
+If we look in appsettings.json we can see that there is a connection string already, and it just so happens that this connection string will connect to our database. We can be sure of that because localhost worked out fine for our MSSQL extension we looked at earlier
 
-You'll see that we have a new folder in our project called `.devcontainer`, within that are a few files so let's look at the Dockerfile first
-![Select Dockerfile from the .devcontainer directory](docs/images/v2-001.png)
+Let's check to see if EF tooling is installed by opening up a terminal and typing `dotnet-ef`
 
-This is just a standard Dockerfile, though you can see that it takes a couple of arguments and copies a file from the mssql directory to the image. 
-![Note the args VARIANT and NODE_VERSION in the Dockerfile](docs/images/v2-002.png)
+You should get a failure like this:
+![command not found](docs/images/v3-002.png)
 
-Let's now look at the docker-compose file
-![docker-compose file contents](docs/images/v2-003.png)
+We can rectify that by typing `dotnet tool install --global dotnet-ef` and then running `dotnet-ef` again right?.....
+![command not found](docs/images/v3-002.png)
 
-Docker-Compose is a way to easily orchestrate multiple containers and have them networked together. This compose file creates two images.
+Turns out that we need to add the .net tools directory to our path.
+`export PATH="$PATH:/root/.dotnet/tools"`
 
-Firstly we have a service called `app` which defines our development container. The context given to it is . which means any copy commands in the Dockerfile are relative to the this (.devcontainer) directory. 
+This is great for us, but what about the next person who uses this container? The idea is that we have a consistent dev environment. So let's edit our Dockerfile to make sure everyone gets this tool by default
 
-Under this you can see the args that we pass thorugh to the Dockerfile, and that we mount ../ (i.e. project root directory) to a directory called `workspace` within the container.
+Open up your Dockerfile under the .devcontainer directory and add the following to the bottom
 
-The final thing to note for app is that under `network_mode` we link to `service:db`. What is this?
+```
+ENV PATH="${PATH}:/root/.dotnet/tools"
+RUN dotnet tool install --global dotnet-ef
+```
 
-Look at the next service that gets defined in the docker-compose file and you'll see that it's called db
-![docker-compose file definition of DB service](docs/images/v2-004.png)
+Note here that we're specifying `root` as the user, it's not the best practice to go running containers as root, but we'll leave it as is for our dev container.
 
-The important information here is that instead of building this from a dockerfile like we did for app, we're pulling the MS-SQL server image down.
+We've updated our Dockerfile which means that we now need to rebuild our dev container. 
 
-For its environment notice that we have set the SA_PASSWORD to `P@ssw0rd`
+![rebuild dev container](docs/images/v3-003.png)
 
+You can do this either via the command pallete (ctrl + shift + p), or by clicking on the green Dev Container banner in the lower left, then selecing rebuild container.
 
-Let's now look at the devcontainer.json file, which tells VSCode how to construct the container for us
+Once the container is rebuilt you should be able to execute the comment
+`dotnet-ef database update` in the terminal.
 
-Firstly notice that we're specifying a docker-compose file and `app` as the service to connect to and that VSCode should mount `/workspace` as the working folder. Remember that in the docker-compose file the root of the code directory was mounted to `/workspace`.
+Once complete you should now see the database `ContosoUniversity3` present in the MSSQL exteions.
+![database visible in explorer](docs/images/v3-004.png)
 
-![dev-contiainer section describing how to mount the containers](docs/images/v2-005.png)
+By clicking on the debug icon on the left hand toolbar, you should now be able to successfully run the application from a Linux container
 
-It's worth pointing out here that you can just mount a simple docker file if you don't have any dependencies.
+![the debugger symbol on VSCode](docs/images/v3-005.png)
 
-Next comes the exciting part
-![dev-container section highlighing MS SQL settings](docs/images/v2-006.png)
+![the website running from a container](docs/images/v3-006.png)
 
-The customizations part is useful to declare a common set of extensions and settings for use within the contianer.
-
-Got a team that's still arguing on Tabs vs Spaces? Set the value to spaces in the settings file and let the tab folks wallow in thier own life choices.
-
-Want to reduce the number of `spelling` comments in PRs? Add a spell check extension here AND configure a list of known words based on the working domain
-
-
-I've highlighted in the image how there is a settings section for `mssql.connections` and an extension added called `ms-mssql.mssql`
-
-If you look to the left toolbar in VSCode you should see the MSSQL server extenion installed, so give it a click
-
-![clicking on the MSSQL extension](docs/images/v2-007.png)
-
-From here choose Connect from the mssql-container link, and enter the passwrod from the compose file `P@ssw0rd`
-
-![clicking on the MSSQL extension's connect](docs/images/v2-008.png)
-
-If you expand the list of databases you should see a couple of standard ones but no `contoso` one
-
-![clicking on the MSSQL extension's connect](docs/images/v2-009.png)
-
-Let's get our application configured to talk to our containerized database.
-
-execute `git checkout v3`
+execute `git checkout v4`
