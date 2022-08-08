@@ -31,11 +31,11 @@
 				"ms-dotnettools.csharp",
 				"ms-mssql.mssql"
 			]
-		}
+		}		
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [5000, 5001],
+	"forwardPorts": [9000],
 
 	// [Optional] To reuse of your local HTTPS dev cert:
 	//
@@ -59,7 +59,8 @@
 	// postCreateCommand.sh parameters: $1=SA password, $2=dacpac path, $3=sql script(s) path
 	"postCreateCommand": "bash .devcontainer/mssql/postCreateCommand.sh 'P@ssw0rd' './bin/Debug/' './.devcontainer/mssql/'",
 	"features": {
-		"docker-from-docker": "latest"
+		"docker-from-docker": "latest",
+		"java": "lts"
 	}
 
 }

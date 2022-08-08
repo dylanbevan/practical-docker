@@ -1,52 +1,104 @@
 # practical-docker
 
-This project uses Entity Framework (EF) to connect to the database and generate models. If we look in the Migrations folder we can see that a number of migrations have been created already for this project
-![List of files in the migration directory](docs/images/v3-001.png)
+Now that we have a working website we should setup some code analysis to ensure that we keep the quality of our code high. 
 
-In order to use EF we need to:
-1. configure the data connection string
-2. apply a migration to the database
+Sonarqube is a freemium service that can take care of this for us. In order to get it integrated we'll need to make a couple of changes to our container files.
 
-If we look in appsettings.json we can see that there is a connection string already, and it just so happens that this connection string will connect to our database. We can be sure of that because localhost worked out fine for our MSSQL extension we looked at earlier
-
-Let's check to see if EF tooling is installed by opening up a terminal and typing `dotnet-ef`
-
-You should get a failure like this:
-![command not found](docs/images/v3-002.png)
-
-We can rectify that by typing `dotnet tool install --global dotnet-ef` and then running `dotnet-ef` again right?.....
-![command not found](docs/images/v3-002.png)
-
-Turns out that we need to add the .net tools directory to our path.
-`export PATH="$PATH:/root/.dotnet/tools"`
-
-This is great for us, but what about the next person who uses this container? The idea is that we have a consistent dev environment. So let's edit our Dockerfile to make sure everyone gets this tool by default
-
-Open up your Dockerfile under the .devcontainer directory and add the following to the bottom
-
+First let's head to the `docker-compose.yml` file under `.devcontainer` and add this section to the bottom"
 ```
-ENV PATH="${PATH}:/root/.dotnet/tools"
-RUN dotnet tool install --global dotnet-ef
+  sonarqube:
+    image: sonarqube
+    ports:
+      - "9000:9000"
+```
+This simply adds a container for Sonarqube and maps port 9000 (sonarqube default) on the container to 9000 on the host.
+
+Docker compose uses the service name as a resolvable address, so we can save some time by adding in a couple of environmental variables here too:
+```
+    environment:
+      - SONARQUBE_PROJECT_KEY=Contoso
+      - SONARQUBE_URL=http://sonarqube:9000
+      - SONARQUBE_TOKEN=YWRtaW46YWRtaW4x
+```
+These can go after the `network_mode` declaration in our `app` service, and we'll use them a bit later.
+
+Mapping the port in the compose file isn't enough for VSCode however, and in the `devcontainer.json` file we need to tell it to forward the port too. After the `customization` section add this:
+```
+"forwardPorts": [9000],
+```
+This will enable us to browse the sonarqube website from our host machine rather than it only be accessible within the container.
+
+That's all that's needed to throw another container in and hook it up. You can imagine how easy it is to build up a suite of supporting services like Redis and HashiCorp Vault.
+
+For performing a sonarqube analysis on our tool though we do need to add a couple of extras. Firstly it needs Java (🤮) to run, so we need to add this to our `devcontainer.json` too:
+
+![Add "java": "lts" to the features section](docs/images/v4-001.png)
+
+We could bake Java to our Dockerfile but this is an easier way as Java needs quite the set of ENV variables to work properly.
+
+Whilst we're here we'll add some environment variables that'll help us out later.
+
+
+Secondly we need to add a dotnet tool to start the analysis, so in our Dockerfile let's throw this in at the bottom:
+![Add dotnet tool install --global dotnet-sonarscanner](docs/images/v4-002.png)
+
+When this is all done, click on the `dev container` box in the lower left of VSCode and choose `rebuild container` from the command palette
+![Choosing "Reubild Container" from the command palette](docs/images/v4-003.png)
+
+---
+We now have support for Sonarqube so the final step is to use it when we do our builds.
+At the root of the project create a new file called `buildAndAnalyse.sh`, and because it's bash we need to set the execute permission on the file. Bring up the terminal in VSCode and type `chmod +x ./buildAndAnalyse.sh`
+
+Now open up the file and paste in the following:
+```
+#!/usr/bin/env bash
+
+sonarqube_generate_token() {
+    curl --silent \
+         --location \
+         --request POST "${SONARQUBE_URL}/api/user_tokens/generate?name=build" \
+         --header "Authorization: Basic ${SONARQUBE_TOKEN}" | jq -r .token
+}
+
+sonarqube_revoke_token() {
+    curl --silent \
+         --location \
+         --request POST "${SONARQUBE_URL}/api/user_tokens/revoke?name=build" \
+         --header "Authorization: Basic ${SONARQUBE_TOKEN}"
+}
+
+main() {
+    sonarqube_revoke_token
+    BUILD_TOKEN=$(sonarqube_generate_token)
+    dotnet sonarscanner begin \
+        /k:$SONARQUBE_PROJECT_KEY \
+        /d:sonar.host.url=$SONARQUBE_URL \
+        /d:sonar.login=$BUILD_TOKEN \
+        /d:sonar.exclusions=**/wwwroot/**/*
+
+    dotnet build
+
+    dotnet sonarscanner end \
+        /d:sonar.login=$BUILD_TOKEN
+    sonarqube_revoke_token
+    exit 0
+}
+main $@
 ```
 
-Note here that we're specifying `root` as the user, it's not the best practice to go running containers as root, but we'll leave it as is for our dev container.
+You may remember that when we setup the environment variables the `SONARQUBE_TOKEN` one looked like this `YWRtaW46YWRtaW4x`. This is simply base 64 encoded and we can find out what it's actual values are by running this command in the terminal:
+```
+echo -n "YWRtaW46YWRtaW4x" | base64 -d
+```
 
-We've updated our Dockerfile which means that we now need to rebuild our dev container. 
+This should give you the result `admin:admin1`. From you windows environment open a browser window and go to localhost:9000. You should see the sonarqube login page where you can enter `admin` for both the username and password. It'll then ask you to change it, at which point you should set the password to be `admin1` to match our encoded value.
 
-![rebuild dev container](docs/images/v3-003.png)
+>Note: This is a bit flakey here, as the whole point of containerizing our dev environment is to keep things consistent. This seems to be a newer change to Sonarqube and hopefully there is a way to set the admin password via ENV variables in the docker compose file
 
-You can do this either via the command pallete (ctrl + shift + p), or by clicking on the green Dev Container banner in the lower left, then selecing rebuild container.
+The final step here is to run the analysis on our solution. From the terminal simply type `./buildAndAnalyse.sh` and hit enter.
 
-Once the container is rebuilt you should be able to execute the comment
-`dotnet-ef database update` in the terminal.
+>Note: This part can be painfully slow when the source code is mounted from a Windows volume. If you intend to use dev containers in the future with Sonarqube, you can get much better performance by cloning the repository into a directory on your Windows Subsystem for Linux (WSL) drive.
 
-Once complete you should now see the database `ContosoUniversity3` present in the MSSQL exteions.
-![database visible in explorer](docs/images/v3-004.png)
+When the analysis is complete, reload the sonarqube page in your browser and have a look at what it picked up!
 
-By clicking on the debug icon on the left hand toolbar, you should now be able to successfully run the application from a Linux container
-
-![the debugger symbol on VSCode](docs/images/v3-005.png)
-
-![the website running from a container](docs/images/v3-006.png)
-
-execute `git checkout v4`
+execute `git checkout v5`
