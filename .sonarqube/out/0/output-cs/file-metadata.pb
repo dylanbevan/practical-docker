@@ -1,0 +1,70 @@
+4
++/workspace/Controllers/CoursesController.csutf-88
+//workspace/Controllers/DepartmentsController.csutf-81
+(/workspace/Controllers/HomeController.csutf-88
+//workspace/Controllers/InstructorsController.csutf-85
+,/workspace/Controllers/StudentsController.csutf-8)
+ /workspace/Data/DbInitializer.csutf-8)
+ /workspace/Data/SchoolContext.csutf-8>
+5/workspace/Migrations/20190327172701_InitialCreate.csutf-8I
+>/workspace/Migrations/20190327172701_InitialCreate.Designer.csutf-8A
+8/workspace/Migrations/20190327174325_MaxLengthOnNames.csutf-8L
+A/workspace/Migrations/20190327174325_MaxLengthOnNames.Designer.csutf-8@
+7/workspace/Migrations/20190327174413_ColumnFirstName.csutf-8K
+@/workspace/Migrations/20190327174413_ColumnFirstName.Designer.csutf-8A
+8/workspace/Migrations/20190327175104_ComplexDataModel.csutf-8L
+A/workspace/Migrations/20190327175104_ComplexDataModel.Designer.csutf-8;
+2/workspace/Migrations/20190327200445_RowVersion.csutf-8F
+;/workspace/Migrations/20190327200445_RowVersion.Designer.csutf-8<
+3/workspace/Migrations/20190327203249_Inheritance.csutf-8G
+</workspace/Migrations/20190327203249_Inheritance.Designer.csutf-8>
+3/workspace/Migrations/SchoolContextModelSnapshot.csutf-8$
+/workspace/Models/Course.csutf-8.
+%/workspace/Models/CourseAssignment.csutf-8(
+/workspace/Models/Department.csutf-8(
+/workspace/Models/Enrollment.csutf-8,
+#/workspace/Models/ErrorViewModel.csutf-8(
+/workspace/Models/Instructor.csutf-8.
+%/workspace/Models/OfficeAssignment.csutf-8$
+/workspace/Models/Person.csutf-8A
+8/workspace/Models/SchoolViewModels/AssignedCourseData.csutf-8B
+9/workspace/Models/SchoolViewModels/EnrollmentDateGroup.csutf-8B
+9/workspace/Models/SchoolViewModels/InstructorIndexData.csutf-8%
+/workspace/Models/Student.csutf-8$
+/workspace/PaginatedList.csutf-8
+/workspace/Program.csutf-8
+/workspace/Startup.csutf-8J
+?/workspace/obj/Debug/net6.0/ContosoUniversity.GlobalUsings.g.csutf-8U
+J/workspace/obj/Debug/net6.0/.NETCoreApp,Version=v6.0.AssemblyAttributes.csutf-8H
+=/workspace/obj/Debug/net6.0/ContosoUniversity.AssemblyInfo.csutf-8M
+B/workspace/obj/Debug/net6.0/ContosoUniversity.RazorAssemblyInfo.csutf-8ì
+áMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Courses_Create_cshtml.g.csutf-8ì
+áMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Courses_Delete_cshtml.g.csutf-8î
+àMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Courses_Details_cshtml.g.csutf-8ë
+ÖMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Courses_Edit_cshtml.g.csutf-8í
+ÜMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Courses_Index_cshtml.g.csutf-8†
+îMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Courses_UpdateCourseCredits_cshtml.g.csutf-8ó
+ãMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Departments_Create_cshtml.g.csutf-8ó
+ãMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Departments_Delete_cshtml.g.csutf-8ò
+åMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Departments_Details_cshtml.g.csutf-8ï
+âMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Departments_Edit_cshtml.g.csutf-8ñ
+äMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Departments_Index_cshtml.g.csutf-8è
+ÉMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Home_About_cshtml.g.csutf-8è
+ÉMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Home_Index_cshtml.g.csutf-8ë
+ÖMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Home_Privacy_cshtml.g.csutf-8ó
+ãMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Instructors_Create_cshtml.g.csutf-8ó
+ãMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Instructors_Delete_cshtml.g.csutf-8ò
+åMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Instructors_Details_cshtml.g.csutf-8ï
+âMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Instructors_Edit_cshtml.g.csutf-8ñ
+äMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Instructors_Index_cshtml.g.csutf-8ë
+ÖMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Shared_Error_cshtml.g.csutf-8°
+ïMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Shared__CookieConsentPartial_cshtml.g.csutf-8ì
+áMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Shared__Layout_cshtml.g.csutf-8•
+ôMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Shared__ValidationScriptsPartial_cshtml.g.csutf-8î
+àMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Students_Create_cshtml.g.csutf-8î
+àMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Students_Delete_cshtml.g.csutf-8ï
+âMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Students_Details_cshtml.g.csutf-8í
+ÜMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Students_Edit_cshtml.g.csutf-8ì
+áMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views_Students_Index_cshtml.g.csutf-8ë
+ÖMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views__ViewImports_cshtml.g.csutf-8è
+ÉMicrosoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views__ViewStart_cshtml.g.csutf-8
